@@ -1,3 +1,4 @@
+use chrono::{offset::TimeZone, Utc};
 use colored::Colorize;
 use prettytable::{cell, row, Table};
 use rusoto_codebuild::{
@@ -9,7 +10,7 @@ use rusoto_core::{HttpClient, Region};
 fn main() {
     let mut build_ids = Vec::new();
     let mut table = Table::new();
-    table.add_row(row!["#", "Project name", "Status", "Url"]);
+    table.add_row(row!["#", "Project name", "Status", "Finished"]);
 
     let client = CodeBuildClient::new_with(
         HttpClient::new().unwrap(),
@@ -44,13 +45,6 @@ fn main() {
 
     for (i, build) in builds.builds.unwrap().iter().enumerate() {
         let build_status = build.clone().build_status.unwrap();
-        let url = format!(
-            "https://{}.console.aws.amazon.com/codesuite/codebuild/projects/{}/build/{}/log",
-            Region::default().name(),
-            build.clone().project_name.unwrap(),
-            build.clone().id.unwrap().replace(':', "%3A")
-        );
-
         let status = match build_status.as_ref() {
             "SUCCEEDED" => "SUCCEEDED".green(),
             "IN_PROGRESS" => "IN_PROGRESS".yellow(),
@@ -59,8 +53,14 @@ fn main() {
             "STOPPED" => "STOPPED".red(),
             _ => "UNDEFINED".red(),
         };
+        let timestamp = Utc.timestamp(build.clone().end_time.unwrap() as i64, 0);
 
-        table.add_row(row![i, build.clone().project_name.unwrap(), status, url]);
+        table.add_row(row![
+            i,
+            build.clone().project_name.unwrap(),
+            status,
+            timestamp.to_rfc2822()
+        ]);
     }
 
     table.printstd();
