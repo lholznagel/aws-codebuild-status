@@ -1,6 +1,6 @@
 [package]
 name = "aws-codebuild-status"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["lholznagel <contact@lholznagel.info>"]
 description = "AWS-Codebuild status in the terminal"
 documentation = "https://github.com/lholznagel/aws-codebuild-status"
