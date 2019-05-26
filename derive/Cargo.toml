@@ -1,0 +1,8 @@
+[package]
+name = "aws-codebuild-status_derive"
+version = "0.2.0"
+authors = ["lholznagel <contact@lholznagel.info>"]
+edition = "2018"
+publish = false
+
+[dependencies]

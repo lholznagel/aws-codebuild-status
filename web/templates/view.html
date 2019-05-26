@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AWS Codebuild status</title>
+
+  <link rel="stylesheet" href="https://cdn.rawgit.com/necolas/normalize.css/master/normalize.css">
+  <link rel="stylesheet" href="https://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css">
+
+  <style>
+    body {
+      color: #606c76;
+      font-family: 'Roboto', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+      font-size: 1.6em;
+      font-weight: 300;
+      letter-spacing: .01em;
+      line-height: 1.6;
+    }
+
+    .navigation {
+      background: #f4f5f6;
+      border-bottom: .1rem solid #d1d1d1;
+      display: block;
+      height: 5.2rem;
+      left: 0;
+      max-width: 100%;
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .navigation .title {
+      display: inline;
+      font-size: 1.6rem;
+      line-height: 5.2rem;
+      padding: 0;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navigation">
+    <section class="container">
+      <h1 class="title">AWS Codebuild status</h1>
+    </section>
+  </nav>
+
+  <div class="container" style="margin-top: 3%">
+    <table style="width: 100%;">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Project name</th>
+          <th>Status</th>
+          <th>Finished</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for build in build_information %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ build.name }}</td>
+          <td>{{ build.status }}</td>
+          <td>{{ build.timestamp }}</td>
+          <td><a href="{{ build.url }}" target="_blank">Link</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>

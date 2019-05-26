@@ -1,6 +1,10 @@
+mod terminal;
+
+#[cfg(feature = "web")]
+use aws_codebuild_status_web::WebOutput;
+
+use aws_codebuild_status_derive::{BuildInformation, CodebuildOutput};
 use chrono::{offset::TimeZone, Utc};
-use colored::Colorize;
-use prettytable::{cell, row, Table};
 use rusoto_codebuild::{
     BatchGetBuildsInput, CodeBuild, CodeBuildClient, ListBuildsForProjectInput, ListProjectsInput,
 };
@@ -8,9 +12,8 @@ use rusoto_core::credential::ChainProvider;
 use rusoto_core::{HttpClient, Region};
 
 fn main() {
+    let mut build_information = Vec::new();
     let mut build_ids = Vec::new();
-    let mut table = Table::new();
-    table.add_row(row!["#", "Project name", "Status", "Finished"]);
 
     let client = CodeBuildClient::new_with(
         HttpClient::new().unwrap(),
@@ -38,30 +41,32 @@ fn main() {
         build_ids.push(builds.ids.unwrap()[0].clone());
     }
 
-    let builds = client
+    let builds_response = client
         .batch_get_builds(BatchGetBuildsInput { ids: build_ids })
         .sync()
         .unwrap();
 
-    for (i, build) in builds.builds.unwrap().iter().enumerate() {
+    for build in builds_response.builds.unwrap() {
         let build_status = build.clone().build_status.unwrap();
-        let status = match build_status.as_ref() {
-            "SUCCEEDED" => "SUCCEEDED".green(),
-            "IN_PROGRESS" => "IN_PROGRESS".yellow(),
-            "FAILED" => "FAILED".red(),
-            "TIMED_OUT" => "TIMED_OUT".red(),
-            "STOPPED" => "STOPPED".red(),
-            _ => "UNDEFINED".red(),
-        };
         let timestamp = Utc.timestamp(build.clone().end_time.unwrap() as i64, 0);
-
-        table.add_row(row![
-            i,
+        let url = format!(
+            "https://{}.console.aws.amazon.com/codesuite/codebuild/projects/{}/build/{}/log",
+            Region::default().name(),
             build.clone().project_name.unwrap(),
-            status,
-            timestamp.to_rfc2822()
-        ]);
+            build.clone().id.unwrap().replace(':', "%3A")
+        );
+
+        build_information.push(BuildInformation {
+            name: build.clone().project_name.unwrap(),
+            status: build_status,
+            timestamp: timestamp.to_rfc2822(),
+            url,
+        });
     }
 
-    table.printstd();
+    #[cfg(feature = "default")]
+    terminal::TerminalOutput::print(&build_information);
+
+    #[cfg(feature = "web")]
+    WebOutput::print(&build_information);
 }

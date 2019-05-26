@@ -1,0 +1,24 @@
+[package]
+name = "aws-codebuild-status"
+version = "0.2.0"
+authors = ["lholznagel <contact@lholznagel.info>"]
+description = "AWS-Codebuild status in the terminal"
+documentation = "https://github.com/lholznagel/aws-codebuild-status"
+homepage = "https://github.com/lholznagel/aws-codebuild-status"
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/lholznagel/aws-codebuild-status"
+edition = "2018"
+
+[dependencies]
+aws-codebuild-status_web = { path = "../web", optional = true }
+aws-codebuild-status_derive = { path = "../derive" }
+chrono = "0.4.6"
+colored = "1.8.0"
+prettytable-rs = "0.8.0"
+rusoto_core = "0.39.0"
+rusoto_codebuild = "0.39.0"
+
+[features]
+default = []
+web = ["aws-codebuild-status_web"]

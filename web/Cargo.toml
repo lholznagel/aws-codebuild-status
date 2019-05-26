@@ -1,0 +1,10 @@
+[package]
+name = "aws-codebuild-status_web"
+version = "0.2.0"
+authors = ["lholznagel <contact@lholznagel.info>"]
+edition = "2018"
+publish = false
+
+[dependencies]
+askama = "0.8.0"
+aws-codebuild-status_derive = { path = "../derive" }
