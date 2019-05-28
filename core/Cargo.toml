@@ -13,13 +13,9 @@ edition = "2018"
 [dependencies]
 aws-codebuild-status_derive = { path = "../derive" }
 aws-codebuild-status_terminal = { path = "../terminal" }
-aws-codebuild-status_web = { path = "../web", optional = true }
+aws-codebuild-status_web = { path = "../web" }
 clap = "2.33.0"
 chrono = "0.4.6"
 rusoto_core = "0.39.0"
 rusoto_codebuild = "0.39.0"
 rusoto_codecommit = "0.39.0"
-
-[features]
-default = []
-web = ["aws-codebuild-status_web"]
