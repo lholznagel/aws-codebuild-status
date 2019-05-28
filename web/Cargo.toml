@@ -1,9 +1,14 @@
 [package]
-name = "aws-codebuild-status_web"
-version = "0.2.0"
 authors = ["lholznagel <contact@lholznagel.info>"]
+description = "AWS-Codebuild status in the terminal"
+documentation = "https://github.com/lholznagel/aws-codebuild-status"
 edition = "2018"
-publish = false
+homepage = "https://github.com/lholznagel/aws-codebuild-status"
+license = "MIT"
+name = "aws-codebuild-status_web"
+readme = "../README.md"
+repository = "https://github.com/lholznagel/aws-codebuild-status"
+version = "0.3.0"
 
 [dependencies]
 askama = "0.8.0"
