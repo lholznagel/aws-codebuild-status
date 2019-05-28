@@ -1,7 +1,7 @@
 use aws_codebuild_status_derive::BuildInformation;
 use chrono::{offset::TimeZone, Utc};
 use rusoto_codebuild::{
-    BatchGetBuildsInput, Build, CodeBuild, CodeBuildClient, ListBuildsForProjectInput,
+    BatchGetBuildsInput, BatchGetProjectsInput, Build, CodeBuild, CodeBuildClient, ListBuildsForProjectInput,
     ListProjectsInput,
 };
 use rusoto_codecommit::{BranchInfo, CodeCommit, CodeCommitClient, GetBranchInput, ListBranchesInput};
@@ -78,12 +78,12 @@ impl AWSCli {
 
         for project in self.get_build_projects() {
             let mut current = AWSBuildProject::default();
-            current.name = project.clone();
+            current.name = self.get_project_source(project.clone());
             current.build_ids = self.get_project_builds(project.clone());
             current.builds = self.get_builds(current.build_ids.clone());
 
-            for branch in self.get_branches(project.clone()) {
-                current.branches.push(self.get_branch_info(branch, project.clone()));
+            for branch in self.get_branches(current.name.clone()) {
+                current.branches.push(self.get_branch_info(branch, current.name.clone()));
             }
 
             info.push(current);
@@ -99,6 +99,21 @@ impl AWSCli {
             .unwrap()
             .projects
             .unwrap()
+    }
+
+    fn get_project_source(&self, build_project: String) -> String {
+        let projects = self.codebuild_client
+            .batch_get_projects(BatchGetProjectsInput {
+                names: vec![build_project]
+            })
+            .sync()
+            .unwrap()
+            .projects
+            .unwrap();
+
+        let location = projects[0].clone().source.unwrap().location.unwrap();
+        let splitted = location.split('/').collect::<Vec<&str>>();
+        splitted.last().unwrap().to_string()
     }
 
     fn get_project_builds(&self, project: String) -> Vec<String> {

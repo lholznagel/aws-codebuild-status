@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 #[derive(Clone, Debug)]
 pub struct BuildInformation {
     pub branch: String,
@@ -10,5 +12,5 @@ pub struct BuildInformation {
 
 pub trait CodebuildOutput {
 
-    fn print(build_info: &[BuildInformation]);
+    fn print(build_info: HashMap<String, Vec<BuildInformation>>);
 }

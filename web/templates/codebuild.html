@@ -80,7 +80,8 @@
       </thead>
 
       <tbody>
-        {% for build in build_information %}
+        {% for (key, value) in build_information %}
+        {% for build in value %}
         <tr>
           <td>{{ loop.index }}</td>
           <td>{{ build.name }}</td>
@@ -89,6 +90,7 @@
           <td>{{ build.timestamp }}</td>
           <td><a href="{{ build.url }}" target="_blank">Link</a></td>
         </tr>
+        {% endfor %}
         {% endfor %}
       </tbody>
     </table>

@@ -11,11 +11,11 @@ repository = "https://github.com/lholznagel/aws-codebuild-status"
 edition = "2018"
 
 [dependencies]
-aws-codebuild-status_web = { path = "../web", optional = true }
 aws-codebuild-status_derive = { path = "../derive" }
+aws-codebuild-status_terminal = { path = "../terminal" }
+aws-codebuild-status_web = { path = "../web", optional = true }
+clap = "2.33.0"
 chrono = "0.4.6"
-colored = "1.8.0"
-prettytable-rs = "0.8.0"
 rusoto_core = "0.39.0"
 rusoto_codebuild = "0.39.0"
 rusoto_codecommit = "0.39.0"

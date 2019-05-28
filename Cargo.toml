@@ -6,5 +6,6 @@ panic = 'abort'
 members = [
   "core",
   "derive",
+  "terminal",
   "web"
 ]

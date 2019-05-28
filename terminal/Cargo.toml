@@ -1,0 +1,11 @@
+[package]
+name = "aws-codebuild-status_terminal"
+version = "0.2.0"
+authors = ["lholznagel <contact@lholznagel.info>"]
+edition = "2018"
+publish = false
+
+[dependencies]
+aws-codebuild-status_derive = { path = "../derive" }
+colored = "1.8.0"
+prettytable-rs = "0.8.0"
