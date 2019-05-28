@@ -41,6 +41,21 @@
       padding: 0;
       text-decoration: none;
     }
+
+    .succeeded {
+      color: green;
+    }
+
+    .in_progress {
+      color: yellow;
+    }
+
+    .failed,
+    .timed_out,
+    .stopped,
+    .undefined {
+      color: red;
+    }
   </style>
 </head>
 
@@ -68,7 +83,7 @@
         <tr>
           <td>{{ loop.index }}</td>
           <td>{{ build.name }}</td>
-          <td>{{ build.status }}</td>
+          <td><span class="{{ build.status|lower }}">{{ build.status }}</span></td>
           <td>{{ build.timestamp }}</td>
           <td><a href="{{ build.url }}" target="_blank">Link</a></td>
         </tr>

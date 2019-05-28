@@ -3,7 +3,7 @@ use aws_codebuild_status_derive::{BuildInformation, CodebuildOutput};
 use std::fs;
 
 #[derive(Template)]
-#[template(path = "view.html")]
+#[template(path = "codebuild.html")]
 struct TemplateData {
     build_information: Vec<BuildInformation>,
 }
@@ -15,6 +15,7 @@ impl CodebuildOutput for WebOutput {
         let template = TemplateData {
             build_information: build_information.to_vec(),
         };
-        fs::write("/tmp/foo.html", template.render().unwrap()).expect("Unable to write file");
+        fs::write("/tmp/aws-codebuild-status.html", template.render().unwrap()).expect("Unable to write file");
+        println!("Saved static website at: file:///tmp/aws-codebuild-status.html");
     }
 }

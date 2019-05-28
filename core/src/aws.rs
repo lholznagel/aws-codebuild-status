@@ -4,8 +4,7 @@ use rusoto_codebuild::{
     BatchGetBuildsInput, Build, CodeBuild, CodeBuildClient, ListBuildsForProjectInput,
     ListProjectsInput,
 };
-use rusoto_core::credential::ChainProvider;
-use rusoto_core::{HttpClient, Region};
+use rusoto_core::Region;
 
 pub struct AWS {
     pub build_information: Vec<BuildInformation>,
@@ -17,11 +16,7 @@ pub struct AWS {
 
 impl AWS {
     pub fn new() -> Self {
-        let codebuild_client = CodeBuildClient::new_with(
-            HttpClient::new().unwrap(),
-            ChainProvider::default(),
-            Region::default(),
-        );
+        let codebuild_client = CodeBuildClient::new(Region::default());
         Self {
             build_information: Vec::new(),
             builds: Vec::new(),
