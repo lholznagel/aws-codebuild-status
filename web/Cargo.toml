@@ -12,4 +12,4 @@ version = "0.3.0"
 
 [dependencies]
 askama = "0.8.0"
-aws-codebuild-status_derive = { path = "../derive" }
+aws-codebuild-status_derive = { path = "../derive", version = "0.3.0" }
