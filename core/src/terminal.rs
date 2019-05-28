@@ -8,7 +8,7 @@ impl CodebuildOutput for TerminalOutput {
 
     fn print(build_info: &[BuildInformation]) {
         let mut table = Table::new();
-        table.add_row(row!["#", "Project name", "Status", "Finished"]);
+        table.add_row(row!["#", "Project name", "Status", "Branch", "Finished"]);
 
         for (i, build) in build_info.iter().enumerate() {
             let status = match build.status.as_ref() {
@@ -20,7 +20,7 @@ impl CodebuildOutput for TerminalOutput {
                 _ => "UNDEFINED".red(),
             };
 
-            table.add_row(row![i, build.name, status, build.timestamp]);
+            table.add_row(row![i, build.name, status, build.branch, build.timestamp]);
         }
 
         table.printstd();

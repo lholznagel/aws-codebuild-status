@@ -1,5 +1,6 @@
 #[derive(Clone, Debug)]
 pub struct BuildInformation {
+    pub branch: String,
     pub commit_id: String,
     pub name: String,
     pub status: String,

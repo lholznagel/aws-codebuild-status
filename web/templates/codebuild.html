@@ -73,6 +73,7 @@
           <th>#</th>
           <th>Project name</th>
           <th>Status</th>
+          <th>Branch</th>
           <th>Finished</th>
           <th>Link</th>
         </tr>
@@ -84,6 +85,7 @@
           <td>{{ loop.index }}</td>
           <td>{{ build.name }}</td>
           <td><span class="{{ build.status|lower }}">{{ build.status }}</span></td>
+          <td>{{ build.branch }}</td>
           <td>{{ build.timestamp }}</td>
           <td><a href="{{ build.url }}" target="_blank">Link</a></td>
         </tr>

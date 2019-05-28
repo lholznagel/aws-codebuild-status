@@ -18,6 +18,7 @@ colored = "1.8.0"
 prettytable-rs = "0.8.0"
 rusoto_core = "0.39.0"
 rusoto_codebuild = "0.39.0"
+rusoto_codecommit = "0.39.0"
 
 [features]
 default = []
