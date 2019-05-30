@@ -53,5 +53,10 @@ Install it with `cargo install aws-codebuild-status`
 
 It is now executable with `aws-codebuild-status`
 
-## Screenshot
-[![screenshot](./assets/screenshot.png)](./assets/screenshot.png)
+## Screenshots
+
+### Terminal
+[![screenshot](./assets/screenshot_terminal.png)](./assets/screenshot_terminal.png)
+
+### Webpage
+[![screenshot](./assets/screenshot_web.png)](./assets/screenshot_web.png)
