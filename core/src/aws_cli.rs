@@ -1,18 +1,21 @@
-use aws_codebuild_status_derive::BuildInformation;
+use aws_codebuild_status_derive::{BuildInformation, Status};
 use chrono::{offset::TimeZone, Utc};
 use rusoto_codebuild::{
-    BatchGetBuildsInput, BatchGetProjectsInput, Build, CodeBuild, CodeBuildClient, ListBuildsForProjectInput,
-    ListProjectsInput,
+    BatchGetBuildsInput, BatchGetProjectsInput, Build, CodeBuild, CodeBuildClient,
+    ListBuildsForProjectInput, ListProjectsInput,
 };
-use rusoto_codecommit::{BranchInfo, CodeCommit, CodeCommitClient, GetBranchInput, ListBranchesInput};
+use rusoto_codecommit::{
+    BranchInfo, CodeCommit, CodeCommitClient, GetBranchInput, ListBranchesInput,
+};
 use rusoto_core::Region;
 
 #[derive(Clone, Debug, Default)]
 pub struct AWSBuildProject {
-    pub name: String,
-    pub build_ids: Vec<String>,
-    pub builds: Vec<Build>,
-    pub branches: Vec<BranchInfo>
+    build_ids: Vec<String>,
+    builds: Vec<Build>,
+    branches: Vec<BranchInfo>,
+    pub project_name: String,
+    pub repository_name: String
 }
 
 impl AWSBuildProject {
@@ -46,8 +49,9 @@ impl AWSBuildProject {
             build_information.push(BuildInformation {
                 branch,
                 commit_id,
-                name: build.clone().project_name.unwrap(),
-                status: build_status,
+                project_name: self.project_name.clone(),
+                repository_name: self.repository_name.clone(),
+                status: Status::from(build_status),
                 timestamp: timestamp.to_rfc2822(),
                 url,
             });
@@ -59,7 +63,7 @@ impl AWSBuildProject {
 
 pub struct AWSCli {
     codebuild_client: CodeBuildClient,
-    codecommit_client: CodeCommitClient
+    codecommit_client: CodeCommitClient,
 }
 
 impl AWSCli {
@@ -69,7 +73,7 @@ impl AWSCli {
 
         Self {
             codebuild_client,
-            codecommit_client
+            codecommit_client,
         }
     }
 
@@ -78,12 +82,15 @@ impl AWSCli {
 
         for project in self.get_build_projects() {
             let mut current = AWSBuildProject::default();
-            current.name = self.get_project_source(project.clone());
+            current.project_name = project.clone();
+            current.repository_name = self.get_project_source(project.clone());
             current.build_ids = self.get_project_builds(project.clone());
             current.builds = self.get_builds(current.build_ids.clone());
 
-            for branch in self.get_branches(current.name.clone()) {
-                current.branches.push(self.get_branch_info(branch, current.name.clone()));
+            for branch in self.get_branches(current.repository_name.clone()) {
+                current
+                    .branches
+                    .push(self.get_branch_info(branch, current.repository_name.clone()));
             }
 
             info.push(current);
@@ -102,9 +109,10 @@ impl AWSCli {
     }
 
     fn get_project_source(&self, build_project: String) -> String {
-        let projects = self.codebuild_client
+        let projects = self
+            .codebuild_client
             .batch_get_projects(BatchGetProjectsInput {
-                names: vec![build_project]
+                names: vec![build_project],
             })
             .sync()
             .unwrap()
@@ -138,8 +146,7 @@ impl AWSCli {
     }
 
     fn get_branches(&self, project: String) -> Vec<String> {
-        self
-            .codecommit_client
+        self.codecommit_client
             .list_branches(ListBranchesInput {
                 repository_name: project,
                 ..Default::default()
@@ -151,9 +158,10 @@ impl AWSCli {
     }
 
     fn get_branch_info(&self, branch: String, project: String) -> BranchInfo {
-        self.codecommit_client.get_branch(GetBranchInput {
+        self.codecommit_client
+            .get_branch(GetBranchInput {
                 branch_name: Some(branch),
-                repository_name: Some(project.clone())
+                repository_name: Some(project.clone()),
             })
             .sync()
             .unwrap()

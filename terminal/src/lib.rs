@@ -1,4 +1,4 @@
-use aws_codebuild_status_derive::{BuildInformation, CodebuildOutput};
+use aws_codebuild_status_derive::{BuildInformation, CodebuildOutput, Status};
 use colored::Colorize;
 use prettytable::{cell, row, Table};
 use std::collections::HashMap;
@@ -14,16 +14,16 @@ impl CodebuildOutput for TerminalOutput {
         for (i, (_, builds)) in build_info.iter().enumerate() {
 
             for build in builds {
-                let status = match build.status.as_ref() {
-                    "SUCCEEDED" => "SUCCEEDED".green(),
-                    "IN_PROGRESS" => "IN_PROGRESS".yellow(),
-                    "FAILED" => "FAILED".red(),
-                    "TIMED_OUT" => "TIMED_OUT".red(),
-                    "STOPPED" => "STOPPED".red(),
-                    _ => "UNDEFINED".red(),
+                let status = match build.status {
+                    Status::Succeeded => Status::Succeeded.to_string().green(),
+                    Status::InProgress => Status::InProgress.to_string().yellow(),
+                    Status::Failed => Status::Failed.to_string().red(),
+                    Status::TimedOut => Status::TimedOut.to_string().red(),
+                    Status::Stopped => Status::Stopped.to_string().red(),
+                    _ => Status::Undefined.to_string().red(),
                 };
 
-                table.add_row(row![i, build.name, status, build.branch, build.timestamp]);
+                table.add_row(row![i, build.project_name, status, build.branch, build.timestamp]);
             }
         }
 

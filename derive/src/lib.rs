@@ -1,11 +1,16 @@
+mod status;
+
+pub use crate::status::Status;
+
 use std::collections::HashMap;
 
 #[derive(Clone, Debug)]
 pub struct BuildInformation {
     pub branch: String,
     pub commit_id: String,
-    pub name: String,
-    pub status: String,
+    pub project_name: String,
+    pub repository_name: String,
+    pub status: Status,
     pub timestamp: String,
     pub url: String,
 }

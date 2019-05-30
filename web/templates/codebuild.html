@@ -84,7 +84,7 @@
         {% for build in value %}
         <tr>
           <td>{{ loop.index }}</td>
-          <td>{{ build.name }}</td>
+          <td>{{ build.project_name }}</td>
           <td><span class="{{ build.status|lower }}">{{ build.status }}</span></td>
           <td>{{ build.branch }}</td>
           <td>{{ build.timestamp }}</td>
