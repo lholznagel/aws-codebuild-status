@@ -15,32 +15,14 @@ Small rust terminal application that list all [AWS-Codebuild](https://aws.amazon
         {
             "Sid": "VisualEditor0",
             "Effect": "Allow",
-            "Action": [
-                "codebuild:BatchGetProjects",
-                "codebuild:BatchGetBuilds"
-            ],
+            "Action": "codebuild:BatchGetBuilds",
             "Resource": "arn:aws:codebuild:REGION:ACCOUNT:project/*"
         },
         {
             "Sid": "VisualEditor1",
             "Effect": "Allow",
-            "Action": "codebuild:ListBuildsForProject",
-            "Resource": "arn:aws:codebuild:REGION:ACCOUNT:project/*"
-        },
-        {
-            "Sid": "VisualEditor2",
-            "Effect": "Allow",
-            "Action": "codebuild:ListProjects",
+            "Action": "codebuild:ListBuilds",
             "Resource": "*"
-        },
-        {
-            "Sid": "VisualEditor3",
-            "Effect": "Allow",
-            "Action": [
-                "codecommit:ListBranches",
-                "codecommit:GetBranch"
-            ],
-            "Resource": "arn:aws:codecommit:REGION:ACCOUNT:*"
         }
     ]
 }
