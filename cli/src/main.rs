@@ -1,5 +1,4 @@
-mod aws_cli;
-
+use aws_codebuild_status_aws::Aws;
 use aws_codebuild_status_derive::CodebuildOutput;
 use aws_codebuild_status_terminal::TerminalOutput;
 use aws_codebuild_status_web::WebOutput;
@@ -21,7 +20,7 @@ fn main() {
         )
         .get_matches();
 
-    let mut aws = aws_cli::AWSCli::new();
+    let mut aws = Aws::new();
     let mut infos = aws.gather_information();
     let mut map = HashMap::new();
 

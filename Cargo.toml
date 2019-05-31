@@ -4,7 +4,8 @@ panic = 'abort'
 
 [workspace]
 members = [
-  "core",
+  "aws",
+  "cli",
   "derive",
   "terminal",
   "web"
