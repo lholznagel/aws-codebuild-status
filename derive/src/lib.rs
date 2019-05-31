@@ -6,7 +6,6 @@ use std::collections::HashMap;
 
 #[derive(Clone, Debug)]
 pub struct BuildInformation {
-    pub branch: String,
     pub commit_id: String,
     pub project_name: String,
     pub repository_name: String,

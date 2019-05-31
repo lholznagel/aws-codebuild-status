@@ -9,7 +9,7 @@ impl CodebuildOutput for TerminalOutput {
 
     fn print(build_info: HashMap<String, Vec<BuildInformation>>) {
         let mut table = Table::new();
-        table.add_row(row!["#", "Project name", "Status", "Branch", "Finished"]);
+        table.add_row(row!["#", "Project name", "Status", "Finished"]);
 
         for (i, (_, builds)) in build_info.iter().enumerate() {
 
@@ -23,7 +23,7 @@ impl CodebuildOutput for TerminalOutput {
                     _ => Status::Undefined.to_string().red(),
                 };
 
-                table.add_row(row![i, build.project_name, status, build.branch, build.timestamp]);
+                table.add_row(row![i, build.project_name, status, build.timestamp]);
             }
         }
 

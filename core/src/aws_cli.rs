@@ -1,24 +1,17 @@
 use aws_codebuild_status_derive::{BuildInformation, Status};
 use chrono::{offset::TimeZone, Utc};
 use rusoto_codebuild::{
-    BatchGetBuildsInput, BatchGetProjectsInput, Build, CodeBuild, CodeBuildClient,
-    ListBuildsForProjectInput, ListProjectsInput,
-};
-use rusoto_codecommit::{
-    BranchInfo, CodeCommit, CodeCommitClient, GetBranchInput, ListBranchesInput,
+    BatchGetBuildsInput, Build, CodeBuild, CodeBuildClient, ListBuildsInput,
 };
 use rusoto_core::Region;
+use std::collections::HashMap;
 
 #[derive(Clone, Debug, Default)]
-pub struct AWSBuildProject {
-    build_ids: Vec<String>,
-    builds: Vec<Build>,
-    branches: Vec<BranchInfo>,
-    pub project_name: String,
-    pub repository_name: String
+pub struct CodeBuildProject {
+    builds: Vec<Build>
 }
 
-impl AWSBuildProject {
+impl CodeBuildProject {
     pub fn get_build_information(&mut self) -> Vec<BuildInformation> {
         let mut build_information = Vec::new();
 
@@ -37,20 +30,15 @@ impl AWSBuildProject {
                 build.clone().project_name.unwrap(),
                 build.clone().id.unwrap().replace(':', "%3A")
             );
-            let mut branch = String::from("");
 
-            for branch_info in self.branches.clone() {
-                if branch_info.commit_id.unwrap() == commit_id {
-                    branch = branch_info.branch_name.unwrap();
-                    break;
-                }
-            }
+            let location = build.clone().source.unwrap().location.unwrap_or_else(|| String::from("Undefined"));
+            let splitted = location.split('/').collect::<Vec<&str>>();
+            let repository_name = splitted.last().unwrap().to_string();
 
             build_information.push(BuildInformation {
-                branch,
                 commit_id,
-                project_name: self.project_name.clone(),
-                repository_name: self.repository_name.clone(),
+                project_name: build.project_name.clone().unwrap(),
+                repository_name,
                 status: Status::from(build_status),
                 timestamp: timestamp.to_rfc2822(),
                 url,
@@ -63,109 +51,57 @@ impl AWSBuildProject {
 
 pub struct AWSCli {
     codebuild_client: CodeBuildClient,
-    codecommit_client: CodeCommitClient,
 }
 
 impl AWSCli {
     pub fn new() -> Self {
         let codebuild_client = CodeBuildClient::new(Region::default());
-        let codecommit_client = CodeCommitClient::new(Region::default());
 
         Self {
             codebuild_client,
-            codecommit_client,
         }
     }
 
-    pub fn gather_information(&mut self) -> Vec<AWSBuildProject> {
-        let mut info: Vec<AWSBuildProject> = Vec::new();
+    pub fn gather_information(&mut self) -> HashMap<String, CodeBuildProject> {
+        let mut result: HashMap<String, CodeBuildProject> = HashMap::new();
 
-        for project in self.get_build_projects() {
-            let mut current = AWSBuildProject::default();
-            current.project_name = project.clone();
-            current.repository_name = self.get_project_source(project.clone());
-            current.build_ids = self.get_project_builds(project.clone());
-            current.builds = self.get_builds(current.build_ids.clone());
-
-            for branch in self.get_branches(current.repository_name.clone()) {
-                current
-                    .branches
-                    .push(self.get_branch_info(branch, current.repository_name.clone()));
-            }
-
-            info.push(current);
+        for build in self.get_builds(None) {
+            result.entry(build.project_name.clone().unwrap())
+                .and_modify(|x| x.builds.push(build.clone()))
+                .or_insert(CodeBuildProject {
+                    builds: vec![build]
+                });
         }
 
-        info
+        result
     }
 
-    fn get_build_projects(&self) -> Vec<String> {
-        self.codebuild_client
-            .list_projects(ListProjectsInput::default())
-            .sync()
-            .unwrap()
-            .projects
-            .unwrap()
-    }
+    fn get_builds(&self, next_token: Option<String>) -> Vec<Build> {
+        let mut builds = Vec::new();
 
-    fn get_project_source(&self, build_project: String) -> String {
-        let projects = self
-            .codebuild_client
-            .batch_get_projects(BatchGetProjectsInput {
-                names: vec![build_project],
+        let result = self.codebuild_client
+            .list_builds(ListBuildsInput {
+                next_token,
+                ..Default::default()
             })
             .sync()
-            .unwrap()
-            .projects
             .unwrap();
 
-        let location = projects[0].clone().source.unwrap().location.unwrap();
-        let splitted = location.split('/').collect::<Vec<&str>>();
-        splitted.last().unwrap().to_string()
-    }
+        builds.append(
+            &mut self.codebuild_client
+                .batch_get_builds(BatchGetBuildsInput {
+                    ids: result.ids.unwrap()
+                })
+                .sync()
+                .unwrap()
+                .builds
+                .unwrap()
+        );
 
-    fn get_project_builds(&self, project: String) -> Vec<String> {
-        self.codebuild_client
-            .list_builds_for_project(ListBuildsForProjectInput {
-                project_name: project,
-                ..Default::default()
-            })
-            .sync()
-            .unwrap()
-            .ids
-            .unwrap()
-    }
+        if result.next_token.is_some() {
+            builds.append(&mut self.get_builds(result.next_token));
+        }
 
-    fn get_builds(&self, build_ids: Vec<String>) -> Vec<Build> {
-        self.codebuild_client
-            .batch_get_builds(BatchGetBuildsInput { ids: build_ids })
-            .sync()
-            .unwrap()
-            .builds
-            .unwrap()
-    }
-
-    fn get_branches(&self, project: String) -> Vec<String> {
-        self.codecommit_client
-            .list_branches(ListBranchesInput {
-                repository_name: project,
-                ..Default::default()
-            })
-            .sync()
-            .unwrap()
-            .branches
-            .unwrap()
-    }
-
-    fn get_branch_info(&self, branch: String, project: String) -> BranchInfo {
-        self.codecommit_client
-            .get_branch(GetBranchInput {
-                branch_name: Some(branch),
-                repository_name: Some(project.clone()),
-            })
-            .sync()
-            .unwrap()
-            .branch
-            .unwrap_or_default()
+        builds
     }
 }
