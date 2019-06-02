@@ -26,6 +26,16 @@ pub enum Status {
     Undefined,
 }
 
+impl Status {
+    pub fn is_failed(&self) -> bool {
+        match self {
+            Status::Failed | Status::Stopped | Status::TimedOut => true,
+            Status::InProgress | Status::Succeeded => false,
+            _ => true,
+        }
+    }
+}
+
 impl From<String> for Status {
     fn from(var: String) -> Self {
         match var.as_ref() {
