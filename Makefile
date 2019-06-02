@@ -1,10 +1,7 @@
 .PHONY: publish build-release
 
 publish:
-	cd derive; cargo publish
-	cd terminal; cargo publish
-	cd web; cargo publish
-	cd core; cargo publish
+	cargo publish
 
 build-release:
 	cargo build --release
