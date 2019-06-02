@@ -1,7 +1,7 @@
 use crate::project::Project;
 
 use rusoto_codebuild::{
-    BatchGetBuildsInput, Build, CodeBuild, CodeBuildClient, ListBuildsInput,
+    BatchGetBuildsInput, Build, CodeBuild, CodeBuildClient, ListBuildsInput, ListProjectsInput
 };
 use rusoto_core::Region;
 use std::collections::HashMap;
@@ -20,10 +20,17 @@ impl Aws {
     }
 
     pub fn gather_information(&mut self) -> HashMap<String, Project> {
+        let projects = self.get_projects(None);
         let mut result: HashMap<String, Project> = HashMap::new();
 
         for build in self.get_builds(None) {
-            result.entry(build.project_name.clone().unwrap())
+            let project_name = build.project_name.clone().unwrap();
+
+            if !projects.contains(&project_name) {
+                continue;
+            }
+
+            result.entry(project_name)
                 .and_modify(|x| x.builds.push(build.clone()))
                 .or_insert(Project {
                     builds: vec![build]
@@ -31,6 +38,25 @@ impl Aws {
         }
 
         result
+    }
+
+    fn get_projects(&self, next_token: Option<String>) -> Vec<String> {
+        let mut projects = Vec::new();
+
+        let result = self.codebuild_client
+            .list_projects(ListProjectsInput {
+                next_token,
+                ..Default::default()
+            })
+            .sync()
+            .unwrap();
+        projects.append(&mut result.projects.unwrap());
+
+        if result.next_token.is_some() {
+            projects.append(&mut self.get_projects(result.next_token));
+        }
+
+        projects
     }
 
     fn get_builds(&self, next_token: Option<String>) -> Vec<Build> {
