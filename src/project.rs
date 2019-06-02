@@ -1,4 +1,4 @@
-use aws_codebuild_status_derive::{BuildInformation, Status};
+use crate::output::{BuildInformation, Status};
 use chrono::{offset::TimeZone, Utc};
 use rusoto_codebuild::{Build};
 use rusoto_core::Region;

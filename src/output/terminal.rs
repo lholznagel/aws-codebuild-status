@@ -1,4 +1,4 @@
-use aws_codebuild_status_derive::{BuildInformation, CodebuildOutput, Status};
+use crate::output::{BuildInformation, CodebuildOutput, Status};
 use colored::Colorize;
 use prettytable::{cell, row, Table};
 use std::collections::HashMap;

@@ -1,7 +1,17 @@
-use aws_codebuild_status_aws::Aws;
-use aws_codebuild_status_derive::CodebuildOutput;
-use aws_codebuild_status_terminal::TerminalOutput;
-use aws_codebuild_status_web::WebOutput;
+mod aws;
+mod project;
+mod output {
+    mod output;
+    mod terminal;
+    mod web;
+
+    pub use self::output::*;
+    pub use self::terminal::*;
+    pub use self::web::*;
+}
+
+use aws::Aws;
+use output::{CodebuildOutput, TerminalOutput, WebOutput};
 use clap::{crate_authors, crate_description, crate_version, App, Arg};
 use std::collections::HashMap;
 

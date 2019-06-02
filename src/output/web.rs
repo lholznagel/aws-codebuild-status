@@ -1,5 +1,5 @@
 use askama::Template;
-use aws_codebuild_status_derive::{BuildInformation, CodebuildOutput};
+use crate::output::{BuildInformation, CodebuildOutput};
 use std::collections::HashMap;
 use std::fs;
 

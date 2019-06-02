@@ -1,9 +1,24 @@
+use std::collections::HashMap;
 use std::fmt::{Display, Formatter, Result};
+
+#[derive(Clone, Debug)]
+pub struct BuildInformation {
+    pub commit_id: String,
+    pub project_name: String,
+    pub repository_name: String,
+    pub status: Status,
+    pub timestamp: String,
+    pub url: String,
+}
+
+pub trait CodebuildOutput {
+
+    fn print(build_info: HashMap<String, Vec<BuildInformation>>);
+}
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub enum Status {
     Failed,
-    Fault,
     InProgress,
     Stopped,
     Succeeded,

@@ -107,45 +107,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "aws-codebuild-status"
 version = "0.3.0"
 dependencies = [
- "aws-codebuild-status_aws 0.3.0",
- "aws-codebuild-status_derive 0.3.0",
- "aws-codebuild-status_terminal 0.3.0",
- "aws-codebuild-status_web 0.3.0",
- "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "aws-codebuild-status_aws"
-version = "0.3.0"
-dependencies = [
- "aws-codebuild-status_derive 0.3.0",
- "aws-codebuild-status_terminal 0.3.0",
- "aws-codebuild-status_web 0.3.0",
+ "askama 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "rusoto_codebuild 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "rusoto_core 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "aws-codebuild-status_derive"
-version = "0.3.0"
-
-[[package]]
-name = "aws-codebuild-status_terminal"
-version = "0.3.0"
-dependencies = [
- "aws-codebuild-status_derive 0.3.0",
  "colored 1.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "prettytable-rs 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "aws-codebuild-status_web"
-version = "0.3.0"
-dependencies = [
- "askama 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "aws-codebuild-status_derive 0.3.0",
+ "rusoto_codebuild 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rusoto_core 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
