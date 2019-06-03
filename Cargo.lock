@@ -108,10 +108,18 @@ name = "aws-codebuild-status"
 version = "0.5.0"
 dependencies = [
  "askama 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "aws-codebuild-status_aws 0.5.0",
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "colored 1.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "prettytable-rs 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "aws-codebuild-status_aws"
+version = "0.5.0"
+dependencies = [
+ "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "rusoto_codebuild 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rusoto_core 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]

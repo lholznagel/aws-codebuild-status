@@ -1,19 +1,15 @@
-mod aws;
-mod code_build_project;
 mod output {
-    mod output;
     mod terminal;
     mod web;
 
-    pub use self::output::*;
     pub use self::terminal::*;
     pub use self::web::*;
 }
 
-use aws::Aws;
+use aws_codebuild_status_aws::{Aws, CodebuildOutput};
 
 use clap::{crate_authors, crate_description, crate_version, App, Arg};
-use output::{CodebuildOutput, TerminalOutput, WebOutput};
+use output::{TerminalOutput, WebOutput};
 use std::collections::HashMap;
 
 fn main() {
@@ -60,7 +56,7 @@ fn main() {
         }
 
         let mut tag_matches = true;
-        for user_tag in matches.values_of("tag").unwrap() {
+        for user_tag in matches.values_of("tag").unwrap_or_default() {
             if user_tag.contains(':') {
                 let splitted = user_tag.split(':').collect::<Vec<_>>();
 
