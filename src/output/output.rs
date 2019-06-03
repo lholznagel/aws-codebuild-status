@@ -9,6 +9,7 @@ pub struct BuildInformation {
     pub status: Status,
     pub timestamp: String,
     pub url: String,
+    pub tags: HashMap<String, String>
 }
 
 pub trait CodebuildOutput {

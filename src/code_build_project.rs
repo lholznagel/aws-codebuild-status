@@ -2,13 +2,15 @@ use crate::output::{BuildInformation, Status};
 use chrono::{offset::TimeZone, Utc};
 use rusoto_codebuild::{Build};
 use rusoto_core::Region;
+use std::collections::HashMap;
 
 #[derive(Clone, Debug, Default)]
-pub struct Project {
-    pub builds: Vec<Build>
+pub struct CodeBuildProject {
+    pub builds: Vec<Build>,
+    pub tags: HashMap<String, String>
 }
 
-impl Project {
+impl CodeBuildProject {
     pub fn get_build_information(&mut self) -> Vec<BuildInformation> {
         let mut build_information = Vec::new();
 
@@ -39,6 +41,7 @@ impl Project {
                 status: Status::from(build_status),
                 timestamp: timestamp.to_rfc2822(),
                 url,
+                tags: self.tags.clone()
             });
         }
 

@@ -1,5 +1,5 @@
 mod aws;
-mod project;
+mod code_build_project;
 mod output {
     mod output;
     mod terminal;
@@ -37,6 +37,15 @@ fn main() {
                 .help("Generates a static web page with additional information")
                 .takes_value(false),
         )
+        .arg(
+            Arg::with_name("tag")
+                .short("t")
+                .long("tag")
+                .value_name("TAG")
+                .help("Filters by tag name. Format: Key:Value")
+                .takes_value(true)
+                .multiple(true),
+        )
         .get_matches();
 
     let mut aws = Aws::new();
@@ -47,6 +56,35 @@ fn main() {
         let project_build_info = project.get_build_information()[0].clone();
 
         if matches.is_present("failed") && !project_build_info.status.is_failed() {
+            continue;
+        }
+
+        let mut tag_matches = true;
+        for user_tag in matches.values_of("tag").unwrap() {
+            if user_tag.contains(':') {
+                let splitted = user_tag.split(':').collect::<Vec<_>>();
+
+                if !project.tags.contains_key(splitted[0]) {
+                    tag_matches = false;
+                    continue;
+                }
+
+                if let Some(value) = project.tags.get(splitted[0]) {
+                    if value != splitted[1] {
+                        tag_matches = false;
+                        continue;
+                    }
+                }
+            } else {
+                continue;
+            }
+
+            if !tag_matches {
+                continue;
+            }
+        }
+
+        if !tag_matches {
             continue;
         }
 
