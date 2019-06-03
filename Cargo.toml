@@ -6,5 +6,6 @@ codegen-units = 1
 
 [workspace]
 members = [
-  "cli"
+  "cli",
+  "lambda"
 ]

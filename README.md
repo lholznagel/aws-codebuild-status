@@ -35,11 +35,28 @@ Small rust terminal application that list all [AWS-Codebuild](https://aws.amazon
 ```
 
 ## Usage
+
+### Cli
 Before you can use it the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and optional `AWS_REGION` must be set as environment variable, as a file in `~/.aws/config` or `~/.aws/credentials`. As an alternative the IAM instance profile will also work.
 
 Install it with `cargo install aws-codebuild-status`
 
 It is now executable with `aws-codebuild-status`
+
+### AWS-Lambda
+
+- Download the latest `rust.zip`
+- Open the overview page for AWS-Lambda.
+- Create a new Function
+    - Choose `Author from Scratch`
+    - Give the function a name
+    - As runtime select `Provide your own bootstrap`
+    - Create the function
+- In the box `Function Code` select as `Code entry type` `Upload a .zip file`
+    - Select the downloaded `rust.zip`
+- Open the IAM role of the lambda
+    - Add the permissions above to the lambda function
+- Done
 
 ## Screenshots
 

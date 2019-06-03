@@ -44,7 +44,7 @@ fn main() {
         )
         .get_matches();
 
-    let mut aws = Aws::new();
+    let mut aws = Aws::default();
     let mut infos = aws.gather_information();
     let mut map = HashMap::new();
 

@@ -12,12 +12,6 @@ pub struct Aws {
 }
 
 impl Aws {
-    pub fn new() -> Self {
-        let codebuild_client = CodeBuildClient::new(Region::default());
-
-        Self { codebuild_client }
-    }
-
     pub fn gather_information(&mut self) -> HashMap<String, CodeBuildProject> {
         let projects = self.get_projects(None);
         let mut result: HashMap<String, CodeBuildProject> = HashMap::new();
@@ -110,5 +104,13 @@ impl Aws {
         }
 
         builds
+    }
+}
+
+impl Default for Aws {
+    fn default() -> Self {
+        Self {
+            codebuild_client: CodeBuildClient::new(Region::default()),
+        }
     }
 }

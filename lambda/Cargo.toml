@@ -5,13 +5,14 @@ documentation = "https://github.com/lholznagel/aws-codebuild-status"
 edition = "2018"
 homepage = "https://github.com/lholznagel/aws-codebuild-status"
 license = "MIT"
-name = "aws-codebuild-status_aws"
+name = "aws-codebuild-status_lambda"
 readme = "README.md"
 repository = "https://github.com/lholznagel/aws-codebuild-status"
 version = "0.5.0"
+publish = false
 
 [dependencies]
-chrono = "0.4.6"
+aws-codebuild-status_aws = { path = "../aws" }
+lambda_runtime = "0.2.1"
 serde = { version = "1.0.92", features = ["derive"] }
-rusoto_codebuild = "0.39.0"
-rusoto_core = "0.39.0"
+serde_json = "1.0.39"

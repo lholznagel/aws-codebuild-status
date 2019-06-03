@@ -1,15 +1,16 @@
+use serde::Serialize;
 use std::collections::HashMap;
 use std::fmt::{Display, Formatter, Result};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize)]
 pub struct BuildInformation {
     pub commit_id: String,
     pub project_name: String,
     pub repository_name: String,
     pub status: Status,
+    pub tags: HashMap<String, String>,
     pub timestamp: String,
     pub url: String,
-    pub tags: HashMap<String, String>
 }
 
 pub trait CodebuildOutput {
@@ -17,7 +18,7 @@ pub trait CodebuildOutput {
     fn print(build_info: HashMap<String, Vec<BuildInformation>>);
 }
 
-#[derive(Debug, Clone, Eq, PartialEq)]
+#[derive(Debug, Clone, Eq, PartialEq, Serialize)]
 pub enum Status {
     Failed,
     InProgress,

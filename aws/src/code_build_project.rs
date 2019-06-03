@@ -1,13 +1,13 @@
 use crate::output::{BuildInformation, Status};
 use chrono::{offset::TimeZone, Utc};
-use rusoto_codebuild::{Build};
+use rusoto_codebuild::Build;
 use rusoto_core::Region;
 use std::collections::HashMap;
 
 #[derive(Clone, Debug, Default)]
 pub struct CodeBuildProject {
     pub builds: Vec<Build>,
-    pub tags: HashMap<String, String>
+    pub tags: HashMap<String, String>,
 }
 
 impl CodeBuildProject {
@@ -30,7 +30,12 @@ impl CodeBuildProject {
                 build.clone().id.unwrap().replace(':', "%3A")
             );
 
-            let location = build.clone().source.unwrap().location.unwrap_or_else(|| String::from("Undefined"));
+            let location = build
+                .clone()
+                .source
+                .unwrap()
+                .location
+                .unwrap_or_else(|| String::from("Undefined"));
             let splitted = location.split('/').collect::<Vec<&str>>();
             let repository_name = splitted.last().unwrap().to_string();
 
@@ -41,7 +46,7 @@ impl CodeBuildProject {
                 status: Status::from(build_status),
                 timestamp: timestamp.to_rfc2822(),
                 url,
-                tags: self.tags.clone()
+                tags: self.tags.clone(),
             });
         }
 
