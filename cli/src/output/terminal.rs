@@ -13,18 +13,16 @@ impl CodebuildOutput for TerminalOutput {
 
         for (i, (_, builds)) in build_info.iter().enumerate() {
 
-            for build in builds {
-                let status = match build.status {
-                    Status::Succeeded => Status::Succeeded.to_string().green(),
-                    Status::InProgress => Status::InProgress.to_string().yellow(),
-                    Status::Failed => Status::Failed.to_string().red(),
-                    Status::TimedOut => Status::TimedOut.to_string().red(),
-                    Status::Stopped => Status::Stopped.to_string().red(),
-                    _ => Status::Undefined.to_string().red(),
-                };
+            let status = match builds[0].status {
+                Status::Succeeded => Status::Succeeded.to_string().green(),
+                Status::InProgress => Status::InProgress.to_string().yellow(),
+                Status::Failed => Status::Failed.to_string().red(),
+                Status::TimedOut => Status::TimedOut.to_string().red(),
+                Status::Stopped => Status::Stopped.to_string().red(),
+                _ => Status::Undefined.to_string().red(),
+            };
 
-                table.add_row(row![i, build.project_name, status, build.timestamp]);
-            }
+            table.add_row(row![i, builds[0].project_name, status, builds[0].timestamp]);
         }
 
         table.printstd();

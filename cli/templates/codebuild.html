@@ -70,7 +70,6 @@
     <table style="width: 100%;">
       <thead>
         <tr>
-          <th>#</th>
           <th>Project name</th>
           <th>Status</th>
           <th>Finished</th>
@@ -82,11 +81,10 @@
         {% for (key, value) in build_information %}
         {% for build in value %}
         <tr>
-          <td>{{ loop.index }}</td>
           <td>{{ build.project_name }}</td>
           <td><span class="{{ build.status|lower }}">{{ build.status }}</span></td>
           <td>{{ build.timestamp }}</td>
-          <td><a href="{{ build.url }}" target="_blank">Link</a></td>
+          <td><a href="{{ build.url|e }}" target="_blank">Link</a></td>
         </tr>
         {% endfor %}
         {% endfor %}

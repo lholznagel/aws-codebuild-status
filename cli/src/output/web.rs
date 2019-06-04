@@ -13,7 +13,12 @@ pub struct WebOutput;
 
 impl CodebuildOutput for WebOutput {
     fn print(build_information: HashMap<String, Vec<BuildInformation>>) {
-        let template = TemplateData { build_information };
+        let mut reduced_map = HashMap::new();
+        for (key, value) in build_information {
+            reduced_map.insert(key, vec![value[0].clone()]);
+        }
+
+        let template = TemplateData { build_information: reduced_map };
         fs::write("/tmp/aws-codebuild-status.html", template.render().unwrap())
             .expect("Unable to write file");
         println!("Saved static website at: file:///tmp/aws-codebuild-status.html");

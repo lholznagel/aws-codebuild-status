@@ -45,7 +45,7 @@ It is now executable with `aws-codebuild-status`
 
 ### AWS-Lambda
 
-- Download the latest `rust.zip`
+- Download the latest `lambda.zip`
 - Open the overview page for AWS-Lambda.
 - Create a new Function
     - Choose `Author from Scratch`
@@ -53,7 +53,7 @@ It is now executable with `aws-codebuild-status`
     - As runtime select `Provide your own bootstrap`
     - Create the function
 - In the box `Function Code` select as `Code entry type` `Upload a .zip file`
-    - Select the downloaded `rust.zip`
+    - Select the downloaded `lambda.zip`
 - Open the IAM role of the lambda
     - Add the permissions above to the lambda function
 - Done

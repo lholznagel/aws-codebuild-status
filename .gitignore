@@ -2,4 +2,4 @@
 **/*.rs.bk
 aws-codebuild-status
 bootstrap
-rust.zip
+lambda.zip
