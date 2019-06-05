@@ -44,6 +44,7 @@ fn main() {
         )
         .get_matches();
 
+    let start = std::time::Instant::now();
     let mut aws = Aws::default();
     let mut infos = aws.gather_information();
     let mut map: HashMap<String, Vec<BuildInformation>> = HashMap::new();
@@ -95,4 +96,5 @@ fn main() {
     if matches.is_present("web") {
         WebOutput::print(map.clone());
     }
+    dbg!(start.elapsed().as_millis());
 }

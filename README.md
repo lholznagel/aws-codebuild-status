@@ -37,11 +37,23 @@ Small rust terminal application that list all [AWS-Codebuild](https://aws.amazon
 ## Usage
 
 ### Cli
-Before you can use it the `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and optional `AWS_REGION` must be set as environment variable, as a file in `~/.aws/config` or `~/.aws/credentials`. As an alternative the IAM instance profile will also work.
 
 Install it with `cargo install aws-codebuild-status`
 
-It is now executable with `aws-codebuild-status`
+It is now executable with `./aws-codebuild-status`
+
+#### Provide AWS credentials
+
+The recommended way is to use the aws-cli.
+- Run `aws configure`
+- Set the AWS Access Key ID and Aws Secret Access Key
+- The region should set to the region where all projects are located
+    - if not, the default region from aws will be used
+- The output format needs to be `json`
+
+As an alternative the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` can be set.
+
+The usage of instance profiles is also supported.
 
 ### AWS-Lambda
 
