@@ -1,4 +1,4 @@
-use crate::code_build_project::CodeBuildProject;
+use crate::CodeBuildProject;
 
 use rusoto_codebuild::{
     BatchGetBuildsInput, BatchGetProjectsInput, Build, CodeBuild, CodeBuildClient, ListBuildsInput,

@@ -5,6 +5,12 @@ use rusoto_core::Region;
 use std::collections::HashMap;
 
 #[derive(Clone, Debug, Default)]
+pub struct Filter {
+    pub failed: Option<bool>,
+    pub tags: Option<Vec<String>>
+}
+
+#[derive(Clone, Debug, Default)]
 pub struct CodeBuildProject {
     pub builds: Vec<Build>,
     pub tags: HashMap<String, String>,
@@ -51,5 +57,47 @@ impl CodeBuildProject {
         }
 
         build_information
+    }
+
+    pub fn get_build_information_with_filter(&mut self, filter: Filter) -> Vec<BuildInformation> {
+        let mut information = self.get_build_information();
+
+        if filter.failed.is_some() && filter.failed.unwrap() {
+            information = information
+                .into_iter()
+                .filter(|x| x.status.is_failed())
+                .collect()
+        }
+
+        if filter.tags.is_some() {
+            information = information
+                .into_iter()
+                .filter(|x| {
+                    let mut result = true;
+                    for tag in filter.clone().tags.unwrap() {
+                        let splitted = tag.split(':').collect::<Vec<_>>();
+                        if splitted.len() != 2 {
+                            return false;
+                        }
+
+                        if !x.tags.contains_key(splitted[0]) {
+                            result = false;
+                            continue;
+                        }
+
+                        if let Some(value) = x.tags.get(splitted[0]) {
+                            if value != splitted[1] {
+                                result = false;
+                                continue;
+                            }
+                        }
+                    }
+
+                    result
+                })
+                .collect()
+        }
+
+        information
     }
 }

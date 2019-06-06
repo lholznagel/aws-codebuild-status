@@ -6,7 +6,7 @@ mod output {
     pub use self::web::*;
 }
 
-use aws_codebuild_status_aws::{Aws, BuildInformation, CodebuildOutput};
+use aws_codebuild_status_aws::{Aws, BuildInformation, CodebuildOutput, Filter};
 
 use clap::{crate_authors, crate_description, crate_version, App, Arg};
 use output::{TerminalOutput, WebOutput};
@@ -50,45 +50,18 @@ fn main() {
     let mut map: HashMap<String, Vec<BuildInformation>> = HashMap::new();
 
     for (name, project) in infos.iter_mut() {
-        for build_info in project.get_build_information() {
-            if matches.is_present("failed") && !build_info.status.is_failed() {
-                continue;
-            }
-            let mut tag_matches = true;
-            for user_tag in matches.values_of("tag").unwrap_or_default() {
-                if user_tag.contains(':') {
-                    let splitted = user_tag.split(':').collect::<Vec<_>>();
+        let tags: Vec<String> = matches
+            .values_of("tag")
+            .unwrap_or_default()
+            .map(|x| x.to_string())
+            .collect();
 
-                    if !project.tags.contains_key(splitted[0]) {
-                        tag_matches = false;
-                        continue;
-                    }
+        let build_info = project.get_build_information_with_filter(Filter {
+            failed: Some(matches.is_present("failed")),
+            tags: Some(tags)
+        });
 
-                    if let Some(value) = project.tags.get(splitted[0]) {
-                        if value != splitted[1] {
-                            tag_matches = false;
-                            continue;
-                        }
-                    }
-                } else {
-                    continue;
-                }
-
-                if !tag_matches {
-                    continue;
-                }
-
-            }
-
-            if !tag_matches {
-                continue;
-            }
-
-
-            map.entry(name.to_string())
-                .and_modify(|x| x.push(build_info.clone()))
-                .or_insert_with(|| vec![build_info]);
-        }
+        map.insert(name.to_string(), build_info);
     }
 
     TerminalOutput::print(map.clone());

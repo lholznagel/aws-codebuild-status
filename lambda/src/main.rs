@@ -1,4 +1,4 @@
-use aws_codebuild_status_aws::{Aws, BuildInformation};
+use aws_codebuild_status_aws::{Aws, BuildInformation, Filter};
 use lambda_runtime::error::HandlerError;
 use lambda_runtime::lambda;
 use serde::Deserialize;
@@ -20,45 +20,20 @@ fn my_handler(e: Event, _: lambda_runtime::Context) -> Result<HashMap<String, Ve
     let mut map: HashMap<String, Vec<BuildInformation>> = HashMap::new();
 
     for (name, project) in infos.iter_mut() {
-        for build_info in project.get_build_information() {
-            if e.failed.is_some() && !build_info.status.is_failed() {
-                continue;
-            }
-            let mut tag_matches = true;
-            for user_tag in e.tags.clone().unwrap_or_default() {
-                if user_tag.contains(':') {
-                    let splitted = user_tag.split(':').collect::<Vec<_>>();
+        let tags: Vec<String> = e
+            .tags
+            .clone()
+            .unwrap_or_default()
+            .into_iter()
+            .map(|x| x.to_string())
+            .collect();
 
-                    if !project.tags.contains_key(splitted[0]) {
-                        tag_matches = false;
-                        continue;
-                    }
+        let build_info = project.get_build_information_with_filter(Filter {
+            failed: Some(e.failed.is_some()),
+            tags: Some(tags)
+        });
 
-                    if let Some(value) = project.tags.get(splitted[0]) {
-                        if value != splitted[1] {
-                            tag_matches = false;
-                            continue;
-                        }
-                    }
-                } else {
-                    continue;
-                }
-
-                if !tag_matches {
-                    continue;
-                }
-
-            }
-
-            if !tag_matches {
-                continue;
-            }
-
-
-            map.entry(name.to_string())
-                .and_modify(|x| x.push(build_info.clone()))
-                .or_insert_with(|| vec![build_info]);
-        }
+        map.insert(name.to_string(), build_info);
     }
 
     Ok(map)

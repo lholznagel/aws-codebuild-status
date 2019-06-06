@@ -15,6 +15,10 @@ impl CodebuildOutput for WebOutput {
     fn print(build_information: HashMap<String, Vec<BuildInformation>>) {
         let mut reduced_map = HashMap::new();
         for (key, value) in build_information {
+            if value.is_empty() {
+                continue;
+            }
+
             reduced_map.insert(key, vec![value[0].clone()]);
         }
 
