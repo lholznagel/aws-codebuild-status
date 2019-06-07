@@ -1,5 +1,5 @@
 /target
 **/*.rs.bk
-aws-codebuild-status
+aws-codebuild-status*
 bootstrap
 lambda.zip
