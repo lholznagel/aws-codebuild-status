@@ -1,4 +1,3 @@
-cargo-features = ["default-run"]
 
 [package]
 authors = ["lholznagel <contact@lholznagel.info>"]
@@ -11,7 +10,6 @@ name = "aws-codebuild-status"
 readme = "README.md"
 repository = "https://github.com/lholznagel/aws-codebuild-status"
 version = "0.5.0"
-default-run = "aws-codebuild-status"
 
 [dependencies]
 askama = "0.8.0"

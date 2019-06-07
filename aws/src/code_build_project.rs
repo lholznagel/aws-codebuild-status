@@ -28,7 +28,12 @@ impl CodeBuildProject {
             }
 
             let commit_id = build.clone().resolved_source_version.unwrap();
-            let timestamp = Utc.timestamp(build.clone().end_time.unwrap() as i64, 0);
+
+            let mut timestamp = Utc::now();
+            if build.clone().end_time.is_some() {
+                timestamp = Utc.timestamp(build.clone().end_time.unwrap() as i64, 0);
+            };
+
             let url = format!(
                 "https://{}.console.aws.amazon.com/codesuite/codebuild/projects/{}/build/{}/log",
                 Region::default().name(),
