@@ -1,13 +1,14 @@
-use aws_codebuild_status_aws::{BuildInformation, CodebuildOutput, Status};
+use aws_codebuild_status_aws::{CodeBuildResult, Status};
 use colored::Colorize;
+use crate::Output;
 use prettytable::{cell, row, Table};
 use std::collections::HashMap;
 
 pub struct TerminalOutput;
 
-impl CodebuildOutput for TerminalOutput {
+impl Output for TerminalOutput {
 
-    fn print(build_info: HashMap<String, Vec<BuildInformation>>) {
+    fn print(build_info: HashMap<String, Vec<CodeBuildResult>>) {
         let mut table = Table::new();
         table.add_row(row!["#", "Project name", "Status", "Finished"]);
 

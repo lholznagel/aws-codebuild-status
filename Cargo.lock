@@ -381,6 +381,8 @@ name = "aws-codebuild-status_aws"
 version = "0.5.0"
 dependencies = [
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "loggify 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rusoto_codebuild 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rusoto_core 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.92 (registry+https://github.com/rust-lang/crates.io-index)",

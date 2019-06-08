@@ -1,13 +1,15 @@
 mod output {
+    mod output;
     mod terminal;
     mod web;
 
+    pub use self::output::Output;
     pub use self::terminal::*;
     pub use self::web::*;
 }
 
-use aws_codebuild_status_aws::{Aws, BuildInformation, CodebuildOutput, Filter};
-
+use crate::output::Output;
+use aws_codebuild_status_aws::{Aws, CodeBuildResult};
 use clap::{crate_authors, crate_description, crate_version, App, Arg};
 use output::{TerminalOutput, WebOutput};
 use std::collections::HashMap;
@@ -44,30 +46,58 @@ fn main() {
         )
         .get_matches();
 
-    let start = std::time::Instant::now();
-    let mut aws = Aws::default();
-    let mut infos = aws.gather_information();
-    let mut map: HashMap<String, Vec<BuildInformation>> = HashMap::new();
+    let aws = Aws::default();
+    let builds: Vec<CodeBuildResult> = aws
+        .fetch_all_builds()
+        .into_iter()
+        .filter(|x| {
+            if matches.is_present("failed") {
+                return x.is_failed();
+            }
 
-    for (name, project) in infos.iter_mut() {
-        let tags: Vec<String> = matches
-            .values_of("tag")
-            .unwrap_or_default()
-            .map(|x| x.to_string())
-            .collect();
+            true
+        })
+        .filter(|x| {
+            if !matches.is_present("tag") {
+                return true;
+            }
 
-        let build_info = project.get_build_information_with_filter(Filter {
-            failed: Some(matches.is_present("failed")),
-            tags: Some(tags)
-        });
+            let mut result = true;
+            for tag in matches.values_of("tag").unwrap() {
+                let splitted = tag.split(':').collect::<Vec<_>>();
+                if splitted.len() != 2 {
+                    return false;
+                }
 
-        map.insert(name.to_string(), build_info);
+                if !x.tags.contains_key(splitted[0]) {
+                    result = false;
+                    continue;
+                }
+
+                if let Some(value) = x.tags.get(splitted[0]) {
+                    if value != splitted[1] {
+                        result = false;
+                        continue;
+                    }
+                }
+            }
+
+            result
+        })
+        .collect();
+
+    let mut project_build: HashMap<String, Vec<CodeBuildResult>> = HashMap::new();
+
+    for build in builds {
+        project_build
+            .entry(build.project_name.clone())
+            .and_modify(|x| x.push(build.clone()))
+            .or_insert_with(|| vec![build]);
     }
 
-    TerminalOutput::print(map.clone());
+    TerminalOutput::print(project_build.clone());
 
     if matches.is_present("web") {
-        WebOutput::print(map.clone());
+        WebOutput::print(project_build.clone());
     }
-    dbg!(start.elapsed().as_millis());
 }

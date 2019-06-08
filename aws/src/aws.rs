@@ -1,5 +1,4 @@
-use crate::CodeBuildProject;
-
+use crate::CodeBuildResult;
 use rusoto_codebuild::{
     BatchGetBuildsInput, BatchGetProjectsInput, Build, CodeBuild, CodeBuildClient, ListBuildsInput,
     ListProjectsInput, Project,
@@ -12,9 +11,9 @@ pub struct Aws {
 }
 
 impl Aws {
-    pub fn gather_information(&mut self) -> HashMap<String, CodeBuildProject> {
+    pub fn fetch_all_builds(&self) -> Vec<CodeBuildResult> {
         let projects = self.get_projects(None);
-        let mut result: HashMap<String, CodeBuildProject> = HashMap::new();
+        let mut result = Vec::new();
 
         for build in self.get_builds(None) {
             let project_name = build.project_name.clone().unwrap();
@@ -32,13 +31,10 @@ impl Aws {
                 tags.insert(tag.key.unwrap(), tag.value.unwrap());
             }
 
-            result
-                .entry(project_name)
-                .and_modify(|x| x.builds.push(build.clone()))
-                .or_insert(CodeBuildProject {
-                    builds: vec![build],
-                    tags,
-                });
+            let mut codebuild_result = CodeBuildResult::from(build);
+            codebuild_result.tags = tags;
+
+            result.push(codebuild_result);
         }
 
         result

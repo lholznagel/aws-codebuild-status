@@ -1,18 +1,19 @@
 use askama::Template;
-use aws_codebuild_status_aws::{BuildInformation, CodebuildOutput};
+use aws_codebuild_status_aws::CodeBuildResult;
+use crate::Output;
 use std::collections::HashMap;
 use std::fs;
 
 #[derive(Template)]
 #[template(path = "codebuild.html")]
 struct TemplateData {
-    build_information: HashMap<String, Vec<BuildInformation>>,
+    build_information: HashMap<String, Vec<CodeBuildResult>>,
 }
 
 pub struct WebOutput;
 
-impl CodebuildOutput for WebOutput {
-    fn print(build_information: HashMap<String, Vec<BuildInformation>>) {
+impl Output for WebOutput {
+    fn print(build_information: HashMap<String, Vec<CodeBuildResult>>) {
         let mut reduced_map = HashMap::new();
         for (key, value) in build_information {
             if value.is_empty() {

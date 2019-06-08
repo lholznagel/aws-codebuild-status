@@ -1,7 +1,7 @@
 mod aws;
-mod code_build_project;
-mod output;
+mod codebuild_result;
+mod status;
 
 pub use self::aws::*;
-pub use self::code_build_project::*;
-pub use self::output::*;
+pub use self::codebuild_result::*;
+pub use self::status::*;
