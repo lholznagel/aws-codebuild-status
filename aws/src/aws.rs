@@ -11,11 +11,15 @@ pub struct Aws {
 }
 
 impl Aws {
-    pub fn fetch_all_builds(&self) -> Vec<CodeBuildResult> {
+    pub fn fetch_builds(
+        &self,
+        next_token: Option<String>,
+    ) -> (Option<String>, Vec<CodeBuildResult>) {
         let projects = self.get_projects(None);
+        let fetch_result = self.get_builds(next_token);
         let mut result = Vec::new();
 
-        for build in self.get_builds(None) {
+        for build in fetch_result.1 {
             let project_name = build.project_name.clone().unwrap();
 
             let project_details = projects
@@ -37,7 +41,19 @@ impl Aws {
             result.push(codebuild_result);
         }
 
-        result
+        (fetch_result.0, result)
+    }
+
+    pub fn fetch_all_builds(&self) -> Vec<CodeBuildResult> {
+        let mut result = self.fetch_builds(None);
+        let mut builds = result.1;
+
+        while result.0.is_some() {
+            result = self.fetch_builds(result.0);
+            builds.append(&mut result.1);
+        }
+
+        builds
     }
 
     fn get_projects(&self, next_token: Option<String>) -> Vec<Project> {
@@ -71,9 +87,7 @@ impl Aws {
         projects
     }
 
-    fn get_builds(&self, next_token: Option<String>) -> Vec<Build> {
-        let mut builds = Vec::new();
-
+    fn get_builds(&self, next_token: Option<String>) -> (Option<String>, Vec<Build>) {
         let result = self
             .codebuild_client
             .list_builds(ListBuildsInput {
@@ -83,23 +97,17 @@ impl Aws {
             .sync()
             .unwrap();
 
-        builds.append(
-            &mut self
-                .codebuild_client
-                .batch_get_builds(BatchGetBuildsInput {
-                    ids: result.ids.unwrap(),
-                })
-                .sync()
-                .unwrap()
-                .builds
-                .unwrap(),
-        );
+        let builds = self
+            .codebuild_client
+            .batch_get_builds(BatchGetBuildsInput {
+                ids: result.ids.unwrap(),
+            })
+            .sync()
+            .unwrap()
+            .builds
+            .unwrap();
 
-        if result.next_token.is_some() {
-            builds.append(&mut self.get_builds(result.next_token));
-        }
-
-        builds
+        (result.next_token, builds)
     }
 }
 

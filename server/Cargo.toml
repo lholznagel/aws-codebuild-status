@@ -19,3 +19,4 @@ askama = "0.8.0"
 aws-codebuild-status_aws = { path = "../aws" }
 log = "0.4.6"
 loggify = "1.1.0"
+serde = { version = "1.0.92", features = ["derive"] }

@@ -2,10 +2,10 @@ use crate::Status;
 use chrono::{offset::TimeZone, Utc};
 use rusoto_codebuild::Build;
 use rusoto_core::Region;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct CodeBuildResult {
     pub commit_id: String,
     pub project_name: String,
