@@ -1,11 +1,38 @@
+use crate::template::TemplateData;
 use actix_web::{web, HttpResponse, Result};
+use askama::Template;
 use aws_codebuild_status_aws::{Aws, CodeBuildResult};
 use log::debug;
+use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
 pub fn get_builds(state: web::Data<Arc<Mutex<Vec<CodeBuildResult>>>>) -> Result<HttpResponse> {
     update_internal_state(&state, None);
-    Ok(HttpResponse::Ok().json(state.lock().unwrap().to_vec()))
+
+    let mut project_build: HashMap<String, Vec<CodeBuildResult>> = HashMap::new();
+    for build in state.lock().unwrap().clone() {
+        project_build
+            .entry(build.project_name.clone())
+            .and_modify(|x| x.push(build.clone()))
+            .or_insert_with(|| vec![build]);
+    }
+
+    let mut reduced_map = HashMap::new();
+    for (key, value) in project_build {
+        if value.is_empty() {
+            continue;
+        }
+
+        reduced_map.insert(key, vec![value[0].clone()]);
+    }
+
+    let template = TemplateData {
+        build_information: reduced_map,
+    };
+
+    Ok(HttpResponse::Ok()
+        .content_type("text/html")
+        .body(template.render().unwrap()))
 }
 
 fn update_internal_state(
