@@ -12,7 +12,8 @@ pub struct CodeBuildResult {
     pub repository_name: String,
     pub status: Status,
     pub tags: HashMap<String, String>,
-    pub timestamp: String,
+    pub timestamp: i64,
+    pub timestamp_formatted: String,
     pub url: String,
 }
 
@@ -40,9 +41,13 @@ impl From<Build> for CodeBuildResult {
             build.clone().resolved_source_version.unwrap()
         };
 
-        let mut timestamp = String::from("Unknown");
+        let mut timestamp = 0i64;
+        let mut timestamp_formatted = String::from("Undefined");
         if build.clone().end_time.is_some() {
             timestamp = Utc
+                .timestamp(build.clone().end_time.unwrap() as i64, 0)
+                .timestamp_millis();
+            timestamp_formatted = Utc
                 .timestamp(build.clone().end_time.unwrap() as i64, 0)
                 .to_rfc2822();
         };
@@ -70,6 +75,7 @@ impl From<Build> for CodeBuildResult {
             status: Status::from(build_status),
             tags: HashMap::new(),
             timestamp,
+            timestamp_formatted,
             url,
         }
     }
@@ -90,7 +96,8 @@ mod tests {
             repository_name: String::new(),
             status: Status::Undefined,
             tags: map,
-            timestamp: String::new(),
+            timestamp: 0,
+            timestamp_formatted: String::new(),
             url: String::new(),
         };
 

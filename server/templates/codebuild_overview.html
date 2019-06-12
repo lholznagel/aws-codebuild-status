@@ -67,6 +67,28 @@
   </nav>
 
   <div class="container" style="margin-top: 3%">
+    <form>
+      <fieldset>
+        <label for="filterName">Filter by Name</label>
+        <input type="text" name="name" placeholder="MyProjectName" id="filterName">
+
+        <label for="filterTag">Filter by Tag</label>
+        <input type="text" name="tag" placeholder="key:value" id="filterTag">
+
+        <label for="filterStatus">Filter by status</label>
+        <select name="status" id="filterStatus">
+          <option value="ALL">All</option>
+          <option value="FAILED">Failed</option>
+          <option value="SUCCEEDED">Succeeded</option>
+          <option value="IN_PROGRESS">In progress</option>
+          <option value="STOPPED">Stopped</option>
+          <option value="TIMED_OUT">Timed out</option>
+        </select>
+
+        <input class="button-primary" type="submit" value="Apply">
+      </fieldset>
+    </form>
+
     <table style="width: 100%;">
       <thead>
         <tr>
@@ -78,15 +100,13 @@
       </thead>
 
       <tbody>
-        {% for (key, value) in build_information %}
-        {% for build in value %}
+        {% for value in codebuild %}
         <tr>
-          <td>{{ build.project_name }}</td>
-          <td><span class="{{ build.status|lower }}">{{ build.status }}</span></td>
-          <td>{{ build.timestamp }}</td>
-          <td><a href="{{ build.url|e }}" target="_blank">Link</a></td>
+          <td>{{ value.project_name }}</td>
+          <td><span class="{{ value.status|lower }}">{{ value.status }}</span></td>
+          <td>{{ value.timestamp_formatted }}</td>
+          <td><a href="{{ value.url|e }}" target="_blank">Link</a></td>
         </tr>
-        {% endfor %}
         {% endfor %}
       </tbody>
     </table>
