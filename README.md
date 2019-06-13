@@ -38,9 +38,12 @@ Small rust terminal application that list all [AWS-Codebuild](https://aws.amazon
 
 ### Cli
 
-Install it with `cargo install aws-codebuild-status`
+- Download the binary from the release page.
+- Start it with `./aws-codebuild-status`
 
-It is now executable with `./aws-codebuild-status`
+Or
+
+Install it with `cargo install aws-codebuild-status`
 
 #### Provide AWS credentials
 
@@ -54,6 +57,12 @@ The recommended way is to use the aws-cli.
 As an alternative the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` can be set.
 
 The usage of instance profiles is also supported.
+
+### Server
+
+- Download the latest release from the release page
+- Start the server with `./aws-codebuild-status_server`
+- Open a browser and navigate to `locahost:8081`, it will return a static webpage
 
 ### AWS-Lambda
 
