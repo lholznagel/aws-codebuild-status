@@ -8,15 +8,14 @@ license = "MIT"
 name = "aws-codebuild-status_server"
 readme = "README.md"
 repository = "https://github.com/lholznagel/aws-codebuild-status"
-version = "0.1.0"
-publish = false
+version = "0.6.0"
 
 [dependencies]
 actix-files = "0.1.1"
 actix-rt = "0.2.2"
 actix-web = "1.0.0"
 askama = "0.8.0"
-aws-codebuild-status_aws = { path = "../aws" }
+aws-codebuild-status_aws = { path = "../aws", version = "0.6.0" }
 log = "0.4.6"
 loggify = "1.1.0"
 serde = { version = "1.0.92", features = ["derive"] }
