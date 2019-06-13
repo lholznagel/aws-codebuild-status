@@ -64,21 +64,6 @@ The usage of instance profiles is also supported.
 - Start the server with `./aws-codebuild-status_server`
 - Open a browser and navigate to `locahost:8081`, it will return a static webpage
 
-### AWS-Lambda
-
-- Download the latest `lambda.zip`
-- Open the overview page for AWS-Lambda.
-- Create a new Function
-    - Choose `Author from Scratch`
-    - Give the function a name
-    - As runtime select `Provide your own bootstrap`
-    - Create the function
-- In the box `Function Code` select as `Code entry type` `Upload a .zip file`
-    - Select the downloaded `lambda.zip`
-- Open the IAM role of the lambda
-    - Add the permissions above to the lambda function
-- Done
-
 ## Screenshots
 
 ### Terminal
