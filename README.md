@@ -1,6 +1,6 @@
 # AWS-Codebuild-Status
 
-Small rust terminal application that list all [AWS-Codebuild](https://aws.amazon.com/de/codebuild/) projects and their current status.
+Small rust terminal application that lists all [AWS-Codebuild](https://aws.amazon.com/de/codebuild/) projects and their current status.
 
 ## Preparation
 
@@ -38,7 +38,7 @@ Small rust terminal application that list all [AWS-Codebuild](https://aws.amazon
 
 ### Cli
 
-- Download the binary from the release page.
+- Download the binary from the release page, you can choose between a statically and dynamically compiled version
 - Start it with `./aws-codebuild-status`
 
 Or
@@ -54,15 +54,15 @@ The recommended way is to use the aws-cli.
     - if not, the default region from aws will be used
 - The output format needs to be `json`
 
-As an alternative the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` can be set.
+As an alternative, the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` can be set.
 
 The usage of instance profiles is also supported.
 
 ### Server
 
-- Download the latest release from the release page
+- Download the latest release from the release page, you can choose between a statically and dynamically compiled version
 - Start the server with `./aws-codebuild-status_server`
-- Open a browser and navigate to `locahost:8081`, it will return a static webpage
+- Open a browser and navigate to `localhost:8081`, it will return a static webpage
 
 ## Screenshots
 
