@@ -366,10 +366,10 @@ dependencies = [
 
 [[package]]
 name = "aws-codebuild-status"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "askama 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "aws-codebuild-status_aws 0.5.0",
+ "aws-codebuild-status_aws 0.6.0",
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "colored 1.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -378,7 +378,7 @@ dependencies = [
 
 [[package]]
 name = "aws-codebuild-status_aws"
-version = "0.5.0"
+version = "0.6.0"
 dependencies = [
  "chrono 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -390,13 +390,13 @@ dependencies = [
 
 [[package]]
 name = "aws-codebuild-status_server"
-version = "0.1.0"
+version = "0.6.0"
 dependencies = [
  "actix-files 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "actix-rt 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "actix-web 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "askama 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "aws-codebuild-status_aws 0.5.0",
+ "aws-codebuild-status_aws 0.6.0",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "loggify 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.92 (registry+https://github.com/rust-lang/crates.io-index)",
