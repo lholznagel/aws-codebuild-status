@@ -7,6 +7,5 @@ codegen-units = 1
 [workspace]
 members = [
   "aws",
-  "cli",
-  "server"
+  "cli"
 ]

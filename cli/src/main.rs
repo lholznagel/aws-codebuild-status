@@ -14,7 +14,8 @@ use clap::{crate_authors, crate_description, crate_version, App, Arg};
 use output::{TerminalOutput, WebOutput};
 use std::collections::HashMap;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     let matches = App::new("AWS Codebuild status")
         .version(crate_version!())
         .author(crate_authors!())
@@ -49,6 +50,8 @@ fn main() {
     let aws = Aws::default();
     let builds: Vec<CodeBuildResult> = aws
         .fetch_all_builds()
+        .await
+        .unwrap()
         .into_iter()
         .filter(|x| {
             if matches.is_present("failed") {

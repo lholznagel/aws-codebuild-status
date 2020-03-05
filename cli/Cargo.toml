@@ -12,9 +12,10 @@ repository = "https://github.com/lholznagel/aws-codebuild-status"
 version = "0.6.0"
 
 [dependencies]
-askama = "0.8.0"
+askama = "0.9.0"
 aws-codebuild-status_aws = { path = "../aws", version = "0.6.0" }
-chrono = "0.4.6"
+chrono = "0.4.10"
 clap = "2.33.0"
-colored = "1.8.0"
+colored = "1.9.3"
 prettytable-rs = "0.8.0"
+tokio = { version = "0.2.13", features = ["full"] }
